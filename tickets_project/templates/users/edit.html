@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Edit user</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+        {% if messages %}
+        <div class="notification is-danger">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% with messages = get_flashed_messages(category_filter=["info"]) %}
+        {% if messages %}
+        <div class="notification is-info">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="/users/{{user.id}}">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="email" name="email" placeholder="Email" autofocus=""
+                        value="{{user.email}}">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="username" placeholder="Username" autofocus=""
+                        value="{{user.username}}">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="password" name="password" placeholder="Password"
+                        value="{{user.password}}">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="firstname" placeholder="First Name"
+                        value="{{user.firstname}}">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="lastname" placeholder="Last Name"
+                        value="{{user.lastname}}">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="number" name="age" placeholder="Age" value="{{user.age}}">
+                </div>
+            </div>
+
+            <div class=" field">
+                <label class="checkbox">
+                    {% if user.is_admin %}
+                    <input type="checkbox" name="is_admin" checked>
+                    {% else %}
+                    <input type="checkbox" name="is_admin">
+                    {% endif %}
+                    Is Admin
+                </label>
+            </div>
+
+            <button class=" button is-block is-info is-large is-fullwidth">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

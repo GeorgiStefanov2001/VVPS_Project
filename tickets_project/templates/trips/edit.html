@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Edit trip</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+        {% if messages %}
+        <div class="notification is-danger">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% with messages = get_flashed_messages(category_filter=["info"]) %}
+        {% if messages %}
+        <div class="notification is-info">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="/trips/{{trip.id}}">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="departure_city" autofocus=""
+                        value={{trip.departure_city}}>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="arrival_city" placeholder="Arrival City"
+                        autofocus="" value={{trip.arrival_city}}>
+                </div>
+            </div>
+
+            <div class=" field">
+                <div class="control">
+                    <input class="input is-large" type="datetime-local" name="departure_datetime"
+                        placeholder="Departure Datetime" autofocus="" value="{{trip.departure_datetime}}">
+                </div>
+            </div>
+
+            <div class=" field">
+                <div class="control">
+                    <input class="input is-large" type="datetime-local" name="arrival_datetime"
+                        placeholder="Arrival Datetime" autofocus="" value="{{trip.arrival_datetime}}">
+                </div>
+            </div>
+
+            <div class=" field">
+                <label class="checkbox">
+                    {% if trip.two_way_trip %}
+                    <input type="checkbox" name="two_way_trip" checked>
+                    {% else %}
+                    <input type="checkbox" name="two_way_trip">
+                    {% endif %}
+                    Is Two Way Trip
+                </label>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="number" name="available_seats" placeholder="Available Seats"
+                        value="{{trip.available_seats}}">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="number" name="base_ticket_price" placeholder="Base Ticket Price"
+                        value="{{trip.base_ticket_price}}">
+                </div>
+            </div>
+
+            <button class=" button is-block is-info is-large is-fullwidth">Save</button>
+        </form>
+
+        <div style="padding-top: 5%;">
+            <form method="POST" action="/trips/delete/{{trip.id}}">
+                <button class=" button is-block is-info is-large is-fullwidth">Delete trip</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

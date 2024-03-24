@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Cards</h3>
+    {% if card %}
+    <p>You have a card of type {{card.card_type}}.</p>
+    {% else %}
+    <p>You don't have a card registered.</p>
+    {% endif %}
+    <div class="box">
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+        {% if messages %}
+        <div class="notification is-danger">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="/cards/register">
+            <div class="field">
+                <p>Register a card: </p>
+                <select name="card_type" id="card_type">
+                    <option value="family">Family</option>
+                    {% if user_age > 60 %}
+                    <option value="aged">Person Of Age</option>
+                    {% endif %}
+                </select>
+            </div>
+            <button class="button is-block is-info is-large is-fullwidth">Register card</button>
+        </form>
+        {% if card %}
+        <div style="padding-top: 5%;">
+            <form method="POST" action="/cards/remove">
+                <button class=" button is-block is-info is-large is-fullwidth">Remove card</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

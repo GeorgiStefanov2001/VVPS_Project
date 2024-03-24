@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="is-offset-4">
+    <h3 class="title">Trips</h3>
+    <div class="box">
+        <form method="POST" action="/trips/filter">
+            <div class="field">
+                <p>Filter by: </p>
+                <select name="filter_type" id="filter_type">
+                    <option value="dep_city">Departure City</option>
+                    <option value="arr_city">Arrival City</option>
+                    <option type="checkbox" value="one_way">One Way Trips</option>
+                    <option type="checkbox" value="two_way">Two Way Trips</option>
+                </select>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="filter_data" placeholder="Enter data to filter by">
+                </div>
+            </div>
+            <button class="button is-block is-info is-large is-fullwidth">Filter</button>
+        </form>
+        <div style="padding-top: 2%;">
+            <form method="GET" action="/trips">
+                <button class=" button is-block is-info is-large is-fullwidth">Remove filters</button>
+            </form>
+        </div>
+    </div>
+    <div class="box">
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+        {% if messages %}
+        <div class="notification is-danger">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <ul>
+            {% for trip in trips %}
+            <li>
+                <div style="float: left">
+                    {{trip}}
+                </div>
+                <div style="display: flex; justify-content: flex-end;">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('reservations.create', trip_id=trip.id) }}" class="button">
+                        Buy Tickets
+                    </a>
+                    {% if current_user.is_admin %}
+                    <a href="{{ url_for('trips.edit', id=trip.id) }}" class="button">
+                        Edit
+                    </a>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% if current_user.is_authenticated and current_user.is_admin %}
+    <a style="float:right" href="{{ url_for('trips.create') }}" class="button">
+        Add new
+    </a>
+    {% endif %}
+</div>
+{% endblock %}

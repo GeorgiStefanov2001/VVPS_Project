@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="is-offset-4">
+    <h3 class="title">Manage Users</h3>
+    {% if current_user.is_authenticated and current_user.is_admin %}
+    <div class="box">
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+        {% if messages %}
+        <div class="notification is-danger">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <ul>
+            {% for user in users %}
+            <li>
+                <div style="float: left">
+                    {{user}}
+                </div>
+                <div style="display: flex; justify-content: flex-end;">
+                    <a href="{{ url_for('users.edit', id=user.id) }}" class="button">
+                        Edit
+                    </a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <a style="float:right" href="{{ url_for('users.signup') }}" class="button">
+        Add new
+    </a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Edit reservation</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+        {% if messages %}
+        <div class="notification is-danger">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% with messages = get_flashed_messages(category_filter=["info"]) %}
+        {% if messages %}
+        <div class="notification is-info">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="/reservations/{{reservation.id}}">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="number" name="ticket_numbers" placeholder="Number of tickets"
+                        autofocus="" value="{{reservation.ticket_numbers}}">
+                </div>
+            </div>
+            <p>Available seats: {{trip.available_seats}}</p>
+            <p>Base ticket price: {{trip.base_ticket_price}}</p>
+
+            <div class="field">
+                <label class="checkbox">
+                    {% if reservation.has_child %}
+                    <input type="checkbox" name="has_child" checked>
+                    {% else %}
+                    <input type="checkbox" name="has_child">
+                    {% endif %}
+                    Child under 16 on trip
+                </label>
+            </div>
+
+            <button class=" button is-block is-info is-large is-fullwidth">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

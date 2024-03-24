@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="is-offset-4">
+    <h3 class="title">My reservations</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+        {% if messages %}
+        <div class="notification is-danger">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% if current_user.is_authenticated %}
+        <ul>
+            {% for reservation in reservations %}
+            <li>
+                <div class="box">
+                    <div style="float: left">
+                        {{reservation}}
+                    </div>
+                    <div style="display: flex; justify-content: flex-end;">
+                        {% if not reservation.is_paid_for %}
+                        <form style="display:inline-block;" method="POST" action="/reservations/{{reservation.id}}/pay">
+                            <div class="field">
+                                <button class="button is-block is-info is-large">Pay</button>
+                            </div>
+                        </form>
+                        <a href=" {{ url_for('reservations.edit', id=reservation.id) }}" class="button is-info is-large"
+                            style="margin-left: 2%">Edit</a>
+                        {% endif %}
+                        <form style="display:inline-block;" method="POST"
+                            action="/reservations/{{reservation.id}}/delete">
+                            <div class="field">
+                                <button class="button is-block is-info is-large"
+                                    style="margin-left: 2%;">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
