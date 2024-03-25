@@ -9,9 +9,3 @@ main = Blueprint("main", __name__)
 @main.route("/")
 def index():
     return redirect(url_for("trips.list"))
-
-
-@main.route("/profile")
-@login_required
-def profile():
-    return render_template("profile.html", firstname=current_user.firstname)

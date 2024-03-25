@@ -127,9 +127,6 @@ def edit_post(id):
             user.email = request.form.get("email")
         if not request.form.get("username") == user.username:
             user.username = request.form.get("username")
-        user.password = bcrypt.hashpw(
-            bytes(request.form.get("password"), "utf-8"), bcrypt.gensalt()
-        )
         user.firstname = request.form.get("firstname")
         user.lastname = request.form.get("lastname")
         user.age = int(request.form.get("age")) if request.form.get("age") else -1
