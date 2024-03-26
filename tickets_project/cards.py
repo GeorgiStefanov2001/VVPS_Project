@@ -2,7 +2,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from . import db
-from .models.train_card import TrainCard
+from .models.train_card import SUPPORTED_CARD_TYPES, TrainCard
 
 cards = Blueprint("cards", __name__)
 
@@ -24,6 +24,10 @@ def register():
             card.card_type = card_type
         else:
             card = TrainCard(card_type=card_type, user_id=current_user.id)
+            if card.type == SUPPORTED_CARD_TYPES[0] and current_user.age <= 60:
+                raise ValueError(
+                    "Card for people of age not available for people under 60"
+                )
             db.session.add(card)
         db.session.commit()
     except ValueError as e:

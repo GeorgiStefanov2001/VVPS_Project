@@ -19,6 +19,4 @@ class TrainCard(db.Model):
     def validate_card_type(self, key, card_type):
         if card_type not in SUPPORTED_CARD_TYPES:
             raise ValueError(f"Card type {card_type} not supported")
-        if card_type == SUPPORTED_CARD_TYPES[0] and current_user.age <= 60:
-            raise ValueError("Card for people of age not available for people under 60")
         return card_type

@@ -26,10 +26,10 @@ def list():
 @trips.route("/trips/filter", methods=["POST"])
 @login_required
 def filter():
-    trips = []
+    trips = Trip.query.all()
     try:
         trips = filter_trips(
-            request.form.get("filter_type"), request.form.get("filter_data")
+            trips, request.form.get("filter_type"), request.form.get("filter_data")
         )
     except ValueError as e:
         flash(str(e), category="error")
@@ -41,7 +41,7 @@ def filter():
     return render_template("/trips/trips.html", trips=trips)
 
 
-def filter_trips(filter_type, filter_data):
+def filter_trips(trips, filter_type, filter_data):
     if filter_type not in SUPPORTED_TRIP_FILTER_TYPES:
         raise ValueError("Filter type not supported!")
     if not filter_data and (
@@ -50,25 +50,20 @@ def filter_trips(filter_type, filter_data):
     ):
         raise ValueError("Enter filter data")
 
-    trips = []
+    filtered_trips = []
     if filter_type == SUPPORTED_TRIP_FILTER_TYPES[0]:
-        trips = Trip.query.filter_by(departure_city=filter_data)
+        filtered_trips = [trip for trip in trips if trip.departure_city == filter_data]
     elif filter_type == SUPPORTED_TRIP_FILTER_TYPES[1]:
-        trips = Trip.query.filter_by(arrival_city=filter_data)
+        filtered_trips = [trip for trip in trips if trip.arrival_city == filter_data]
     else:
         two_way_trip = (
             filter_type == False
             if filter_type == SUPPORTED_TRIP_FILTER_TYPES[2]
             else True
         )
-        trips = Trip.query.filter_by(two_way_trip=two_way_trip)
+        filtered_trips = [trip for trip in trips if trip.two_way_trip == two_way_trip]
 
-    if not current_user.is_admin:
-        trips = [
-            trip for trip in trips if trip.departure_datetime >= datetime.datetime.now()
-        ]
-
-    return trips
+    return filtered_trips
 
 
 @trips.route("/trips/create")
@@ -203,10 +198,10 @@ def validate_trip_input(inputs):
     departure_city = inputs.get("departure_city")
     arrival_city = inputs.get("arrival_city")
     departure_datetime = datetime.datetime.strptime(
-        inputs.get("departure_datetime"), DATETIME_FORMAT
+        inputs.get("departure_datetime", ""), DATETIME_FORMAT
     )
     arrival_datetime = datetime.datetime.strptime(
-        inputs.get("arrival_datetime"), DATETIME_FORMAT
+        inputs.get("arrival_datetime", ""), DATETIME_FORMAT
     )
 
     # sanity checks
