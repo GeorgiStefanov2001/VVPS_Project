@@ -75,7 +75,8 @@ def create_post(trip_id):
 
         has_child = bool(request.form.get("has_child"))
 
-        final_price = calculate_discount(trip, num_of_tickets, has_child)
+        card = TrainCard.query.filter_by(user_id=current_user.id).first()
+        final_price = calculate_discount(trip, card, num_of_tickets, has_child)
 
         # create a new trip with the form data.
         new_reservation = Reservation(
@@ -133,7 +134,8 @@ def edit_post(id):
         )
 
         has_child = bool(request.form.get("has_child"))
-        final_price = calculate_discount(trip, num_of_tickets, has_child)
+        card = TrainCard.query.filter_by(user_id=current_user.id).first()
+        final_price = calculate_discount(trip, card, num_of_tickets, has_child)
 
         # update reservation
         trip.available_seats += reservation.ticket_numbers
@@ -170,7 +172,7 @@ def delete(id):
     return redirect(url_for("reservations.list"))
 
 
-def calculate_discount(trip, num_of_tickets, has_child):
+def calculate_discount(trip, card, num_of_tickets, has_child):
     total_discount = 0
     result_sum = 0
     has_old_aged_card = False
@@ -183,7 +185,6 @@ def calculate_discount(trip, num_of_tickets, has_child):
         total_discount += 0.05
 
     # Card-based discounts
-    card = TrainCard.query.filter_by(user_id=current_user.id).first()
     if card:
         if card.card_type == SUPPORTED_CARD_TYPES[0]:
             # card for old aged people

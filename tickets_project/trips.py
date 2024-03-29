@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
@@ -17,9 +17,7 @@ def list():
     trips = Trip.query.all()
 
     if not current_user.is_admin:
-        trips = [
-            trip for trip in trips if trip.departure_datetime >= datetime.datetime.now()
-        ]
+        trips = [trip for trip in trips if trip.departure_datetime >= datetime.now()]
     return render_template("/trips/trips.html", trips=trips)
 
 
@@ -35,9 +33,7 @@ def filter():
         flash(str(e), category="error")
 
     if not current_user.is_admin:
-        trips = [
-            trip for trip in trips if trip.departure_datetime >= datetime.datetime.now()
-        ]
+        trips = [trip for trip in trips if trip.departure_datetime >= datetime.now()]
     return render_template("/trips/trips.html", trips=trips)
 
 
@@ -87,10 +83,10 @@ def create_post():
         new_trip = Trip(
             departure_city=request.form.get("departure_city"),
             arrival_city=request.form.get("arrival_city"),
-            departure_datetime=datetime.datetime.strptime(
+            departure_datetime=datetime.strptime(
                 request.form.get("departure_datetime"), DATETIME_FORMAT
             ),
-            arrival_datetime=datetime.datetime.strptime(
+            arrival_datetime=datetime.strptime(
                 request.form.get("arrival_datetime"), DATETIME_FORMAT
             ),
             two_way_trip=True if request.form.get("two_way_trip") else False,
@@ -147,10 +143,10 @@ def edit_post(id):
 
         trip.departure_city = str(request.form.get("departure_city"))
         trip.arrival_city = str(request.form.get("arrival_city"))
-        trip.departure_datetime = datetime.datetime.strptime(
+        trip.departure_datetime = datetime.strptime(
             request.form.get("departure_datetime"), DATETIME_FORMAT
         )
-        trip.arrival_datetime = datetime.datetime.strptime(
+        trip.arrival_datetime = datetime.strptime(
             request.form.get("arrival_datetime"), DATETIME_FORMAT
         )
         trip.two_way_trip = True if request.form.get("two_way_trip") else False
@@ -197,10 +193,10 @@ def delete_post(id):
 def validate_trip_input(inputs):
     departure_city = inputs.get("departure_city")
     arrival_city = inputs.get("arrival_city")
-    departure_datetime = datetime.datetime.strptime(
+    departure_datetime = datetime.strptime(
         inputs.get("departure_datetime", ""), DATETIME_FORMAT
     )
-    arrival_datetime = datetime.datetime.strptime(
+    arrival_datetime = datetime.strptime(
         inputs.get("arrival_datetime", ""), DATETIME_FORMAT
     )
 

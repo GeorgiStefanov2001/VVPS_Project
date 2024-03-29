@@ -2,7 +2,6 @@ import unittest
 
 from tickets_project import create_app
 from tickets_project.models.train_card import SUPPORTED_CARD_TYPES, TrainCard
-from tickets_project.models.user import User
 
 
 class TestCards(unittest.TestCase):

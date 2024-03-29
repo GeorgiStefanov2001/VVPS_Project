@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from sqlalchemy.orm import validates
 
@@ -36,7 +36,7 @@ class Trip(db.Model):
     def validate_departure_datetime(self, key, departure_datetime):
         if not departure_datetime:
             raise ValueError("No departure datetime provided")
-        if departure_datetime < datetime.datetime.now():
+        if departure_datetime < datetime.now():
             raise ValueError("Departure time cannot be in the past")
         return departure_datetime
 
