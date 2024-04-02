@@ -1,4 +1,6 @@
+import os
 import unittest
+from unittest import mock as mock
 
 from tickets_project import create_app
 from tickets_project.models.reservation import Reservation
@@ -7,6 +9,9 @@ from tickets_project.models.user import User
 
 
 class TestUsers(unittest.TestCase):
+    @mock.patch.dict(
+        os.environ, {"APP_SECRET": "UNIT_TEST", "FLASK_APP": "tickets_project"}
+    )
     def setUp(self) -> None:
         self.app = create_app()
 

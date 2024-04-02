@@ -1,3 +1,4 @@
+import os
 import unittest
 from datetime import datetime, timedelta
 from unittest import mock as mock
@@ -10,6 +11,9 @@ from tickets_project.trips import (DATETIME_FORMAT, filter_trips,
 
 
 class TestTrips(unittest.TestCase):
+    @mock.patch.dict(
+        os.environ, {"APP_SECRET": "UNIT_TEST", "FLASK_APP": "tickets_project"}
+    )
     def setUp(self) -> None:
         self.app = create_app()
 

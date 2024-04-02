@@ -1,10 +1,15 @@
+import os
 import unittest
+from unittest import mock as mock
 
 from tickets_project import create_app
 from tickets_project.models.train_card import SUPPORTED_CARD_TYPES, TrainCard
 
 
 class TestCards(unittest.TestCase):
+    @mock.patch.dict(
+        os.environ, {"APP_SECRET": "UNIT_TEST", "FLASK_APP": "tickets_project"}
+    )
     def setUp(self) -> None:
         self.app = create_app()
 

@@ -1,3 +1,4 @@
+import os
 import unittest
 from datetime import date, datetime
 from unittest import mock as mock
@@ -12,6 +13,9 @@ from tickets_project.trips import DATETIME_FORMAT
 
 
 class TestReservations(unittest.TestCase):
+    @mock.patch.dict(
+        os.environ, {"APP_SECRET": "UNIT_TEST", "FLASK_APP": "tickets_project"}
+    )
     def setUp(self) -> None:
         self.app = create_app()
 
@@ -30,7 +34,6 @@ class TestReservations(unittest.TestCase):
             # the reservation is not paid for
             self.assertFalse(res.is_paid_for)
 
-    # TODO: different unit tests for different behaviours?
     def test_reservation_number_of_tickets(self):
         """
         Verify that creating a reservation with different number of tickets behave as expected.
